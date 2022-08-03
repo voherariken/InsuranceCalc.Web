@@ -1,10 +1,13 @@
 import { Injectable } from "@angular/core";
 import {HttpClient} from "@angular/common/http"
 import { Observable } from "rxjs";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class DataService {
-    baseApiUrl = 'https://localhost:44346/api/';
+
+  baseApiUrl = environment.baseApiUrl;
+
   constructor(private http: HttpClient) { }
 
   get<T>(url: string, id?: number): Observable<T> {

@@ -1,12 +1,12 @@
-<form class="form-horizontal p-4" [formGroup]="formInsuranceCalc" (ngSubmit)="submitInsuranceCalc()">
+<form class="form-horizontal p-5" [formGroup]="formInsuranceCalc" (ngSubmit)="submitInsuranceCalc()">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h1 class="text-success">Insurance Calculator</h1>
     </div>
     <div class="panel-body">
       <div class="form-group">
-        <label for="_name" class="col-sm-2">Name</label>
-        <div class="col-sm-8 control-label">
+        <label for="_name" class="col-sm-6">Name</label>
+        <div class="col-sm-6 control-label">
           <input type="text" formControlName="name" class="form-control" id="_name">
           <span class="error"
           *ngIf="((formInsuranceCalc.get('name')?.touched || formInsuranceCalc.get('name')?.dirty)
@@ -16,8 +16,8 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="_age" class="col-sm-2">Age</label>
-        <div class="col-sm-8 control-label">
+        <label for="_age" class="col-sm-6">Age</label>
+        <div class="col-sm-6 control-label">
           <input type="number"formControlName="age" class="form-control" id="_age">
           <span class="error"
           *ngIf="((formInsuranceCalc.get('age')?.touched || formInsuranceCalc.get('age')?.dirty)
@@ -32,20 +32,25 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="_dateOfBirth" class="col-sm-2">Date of Birth</label>
-        <div class="col-sm-8 control-label">
-          <input type="date" formControlName="dateOfBirth" class="form-control" id="_dateOfBirth">
+        <label for="_dateOfBirth" class="col-sm-6">Date of Birth</label>
+        <div class="col-sm-6 control-label">
+          <input type="date" appDateOfBirthValidator formControlName="dateOfBirth" class="form-control" id="_dateOfBirth">
           <span class="error"
           *ngIf="((formInsuranceCalc.get('dateOfBirth')?.touched || formInsuranceCalc.get('dateOfBirth')?.dirty)
           && getError('dateOfBirth','required'))">
           Date of birth is required.
           </span>
+          <span class="error"
+          *ngIf="((formInsuranceCalc.get('dateOfBirth')?.touched || formInsuranceCalc.get('dateOfBirth')?.dirty)
+          && getError('dateOfBirth','invalidDateOfBirth'))">
+          Please enter valid Date of birth.
+          </span>
         </div>
       </div>
       <div class="form-group">
-        <label for="_occupation" class="col-sm-2">Occupation</label>
-        <div class="col-sm-8 control-label">
-          <select id="_occupation" formControlName="occupation" class="form-control">
+        <label for="_occupation" class="col-sm-6">Occupation</label>
+        <div class="col-sm-6 control-label">
+          <select id="_occupation" formControlName="occupation" class="form-control" (change)="onOccupationChange()">
             <option selected disabled>Select</option>
             <option *ngFor="let occupation of occupations" [value]="occupation.occupationId">{{occupation.occupationName}}</option>
           </select>
@@ -57,8 +62,8 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="_deathSumInsured" class="col-sm-2">Death – Sum Insured</label>
-        <div class="col-sm-8 control-label">
+        <label for="_deathSumInsured" class="col-sm-6">Death – Sum Insured</label>
+        <div class="col-sm-6 control-label">
           <input type="number" formControlName="deathSumInsured" class="form-control" id="_deathSumInsured">
           <span class="error"
           *ngIf="((formInsuranceCalc.get('deathSumInsured')?.touched || formInsuranceCalc.get('deathSumInsured')?.dirty)
@@ -74,11 +79,11 @@
       </div>
     </div>
     <div class="panel-footer">
-      <button type="submit" class="btn btn-primary control-label">Submit</button>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </div>
   </div>
 </form>
-<div class="p-4">
-  <label class="col-sm-2">Death Premium: </label>
-  <label class="col-sm-8">{{deathPremium}}</label>
+<div style="margin-left: 50px">
+  <label class="col-sm-2" style="font-weight:bolder;">Death Premium: </label>
+  <label style="font-weight:bold">{{deathPremium | currency}}</label>
 </div>

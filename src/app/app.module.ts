@@ -8,12 +8,14 @@ import { AppComponent } from './app.component';
 import { DataService } from './core/data.service';
 import { InsuranceCalcComponent } from './insurance-calc/insurance-calc.component';
 import { ErrorComponent } from './error/error.component';
+import { DateOfBirthValidatorDirective } from './core/date-of-birth-validator.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     InsuranceCalcComponent,
-    ErrorComponent
+    ErrorComponent,
+    DateOfBirthValidatorDirective
   ],
   imports: [
     BrowserModule,

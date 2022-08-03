@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DataService } from '../core/data.service';
 import { Occupation } from '../models/Occupation';
@@ -13,8 +13,8 @@ export class InsuranceCalcComponent implements OnInit, OnDestroy {
   title = 'InsuranceCalc';
   formInsuranceCalc : FormGroup;
   occupations :  Occupation[] = [];
-  deathPremium : number | null;
-  subscription : Subscription;
+  deathPremium : number | null = null;
+  subscription : Subscription  = new Subscription();
 
   constructor(private formBuilder : FormBuilder, private dataService : DataService){
     this.formInsuranceCalc = this.formBuilder.group({
@@ -24,14 +24,10 @@ export class InsuranceCalcComponent implements OnInit, OnDestroy {
       occupation:[,Validators.required],
       deathSumInsured:[,[Validators.required, Validators.min(1)]]
     });
-    this.deathPremium = null;
-    this.subscription = new Subscription();
     this.getOccupations();
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void { }
 
   getError(controlName : string, errorType:string) : boolean{
     var v = this.formInsuranceCalc.get(controlName)?.errors;
@@ -46,19 +42,25 @@ export class InsuranceCalcComponent implements OnInit, OnDestroy {
 
   submitInsuranceCalc() : void {
     if(!this.formInsuranceCalc.valid){
-    console.log(this.formInsuranceCalc.errors);
-  }
-  const obj = Object.assign({});
-  obj.name = this.formInsuranceCalc.value["name"];
-  obj.age = this.formInsuranceCalc.value["age"];
-  obj.dateOfBirth = this.formInsuranceCalc.value["dateOfBirth"];
-  obj.occupationId = +this.formInsuranceCalc.value["occupation"];
-  obj.deathSumInsured = this.formInsuranceCalc.value["deathSumInsured"];
-  console.log(obj);
+      this.formInsuranceCalc.markAllAsTouched();
+      return;
+    }
+    const obj = Object.assign({});
+    obj.name = this.formInsuranceCalc.value["name"];
+    obj.age = this.formInsuranceCalc.value["age"];
+    obj.dateOfBirth = this.formInsuranceCalc.value["dateOfBirth"];
+    obj.occupationId = +this.formInsuranceCalc.value["occupation"];
+    obj.deathSumInsured = this.formInsuranceCalc.value["deathSumInsured"];
     this.subscription.add(
       this.dataService.post<number>('InsuranceCalculator/deathPremium', obj)
         .subscribe(p => {console.log(p); this.deathPremium = p})
       );
+  }
+
+  public onOccupationChange():void{
+    if(this.formInsuranceCalc.valid){
+      this.submitInsuranceCalc();
+    }
   }
 
   ngOnDestroy(): void {
