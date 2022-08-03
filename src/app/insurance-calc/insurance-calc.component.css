@@ -1,0 +1,14 @@
+.control-label{
+  margin: 10px;
+  }
+
+  .error{
+    color: red;
+    font-size: small;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
