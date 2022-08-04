@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import {HttpClient} from "@angular/common/http"
-import { Observable } from "rxjs";
+import { catchError, Observable, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 
 @Injectable()
@@ -20,6 +20,11 @@ export class DataService {
 
   post<T>(url: string, data: any): Observable<T> {
     return this.http.post<T>(this.getUrl(url), data);
+    // .pipe(
+    //   catchError(error => {
+    //     return throwError(() => new Error())
+    //   })
+    // );
   }
 
   put<T>(url: string, data: any): Observable<T> {

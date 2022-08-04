@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { catchError, Subscription } from 'rxjs';
 import { DataService } from '../core/data.service';
 import { Occupation } from '../models/Occupation';
 
@@ -14,6 +14,7 @@ export class InsuranceCalcComponent implements OnInit, OnDestroy {
   formInsuranceCalc : FormGroup;
   occupations :  Occupation[] = [];
   deathPremium : number | null = null;
+  error : string = '';
   subscription : Subscription  = new Subscription();
 
   constructor(private formBuilder : FormBuilder, private dataService : DataService){
@@ -36,8 +37,18 @@ export class InsuranceCalcComponent implements OnInit, OnDestroy {
 
   getOccupations() : void {
       this.subscription.add(
-        this.dataService.getList<Occupation>('InsuranceCalculator/occupations').subscribe(p => this.occupations = p)
-        );
+        this.dataService.getList<Occupation>('InsuranceCalculator/occupations')
+        .subscribe(
+          {
+            next: p => {
+              this.occupations = p
+            },
+            error: e =>{
+              this.error = "Error fetching Occupation List.. Please try again.."
+            }
+          }
+        )
+      )
   }
 
   submitInsuranceCalc() : void {
@@ -53,8 +64,18 @@ export class InsuranceCalcComponent implements OnInit, OnDestroy {
     obj.deathSumInsured = this.formInsuranceCalc.value["deathSumInsured"];
     this.subscription.add(
       this.dataService.post<number>('InsuranceCalculator/deathPremium', obj)
-        .subscribe(p => {console.log(p); this.deathPremium = p})
-      );
+        .subscribe(
+          {
+            next: p =>{
+              this.deathPremium = p;
+            },
+            error: e => {
+              this.deathPremium = null;
+              this.error = "Error fetching Death Premium.. Please try again..";
+            }
+          }
+        )
+    );
   }
 
   public onOccupationChange():void{
