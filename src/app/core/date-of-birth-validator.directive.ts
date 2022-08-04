@@ -16,9 +16,6 @@ export class DateOfBirthValidatorDirective implements Validator {
   validate(control: AbstractControl<any, any>): ValidationErrors | null {
     const dateOfBirth = new Date(control.value);
     const date = new Date();
-    console.log(dateOfBirth > date);
-    console.log(dateOfBirth);
-    console.log(date)
     if(dateOfBirth > date || dateOfBirth.getFullYear() < 1900)
       return { 'invalidDateOfBirth' : true }
     else
